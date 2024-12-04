@@ -29,8 +29,8 @@ This project demonstrates a microservices application deployment using Kubernete
 ### Frontend Service
 ![Frontend Service](frontend.png)
 
-### Backend Service Access
-![Backend Service Access inside frontend pod (Success)](backend-svc-can-access.png)
+### Backend Service Access inside frontend pod (Success)
+![Backend Service Access ](backend-svc-can-access.png)
 
 ### Port Forwarding Demonstrations
 #### Frontend Port Forward
