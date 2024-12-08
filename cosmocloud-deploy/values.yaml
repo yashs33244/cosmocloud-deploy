@@ -1,0 +1,27 @@
+# Default values for cosmocloud-deploy
+
+# Backend configuration
+backend:
+  name: backend
+  image: shreybatra/sample-backend
+  replicas: 1
+  port: 8000
+  env:
+    REDIS_URI: redis://redis-svc:6379
+
+# Frontend configuration
+frontend:
+  name: frontend
+  image: shreybatra/sample-frontend
+  replicas: 1
+  port: 5173
+  nodePort: 31000
+  env:
+    BACKEND_URL: http://backend-svc:8000
+
+# Redis configuration
+redis:
+  name: redis
+  image: redis
+  replicas: 1
+  port: 6379
