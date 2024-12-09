@@ -27,7 +27,7 @@ This project demonstrates a microservices application deployment using Kubernete
 ## 🚀 Deployment Screenshots
 
 ### Time Constraints fullfill
-![Running](runnnig.png)
+![Running](running.png)
 
 ### Frontend Service
 ![Frontend Service](frontend.png)
