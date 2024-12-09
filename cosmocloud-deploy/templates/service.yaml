@@ -2,35 +2,40 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-svc
+  namespace: {{ .Values.namespace }}
 spec:
+  type: {{ .Values.redis.service.type }}
   selector:
-    app: redis
-  type: ClusterIP
+    app: {{ .Values.redis.name }}
   ports:
-  - port: 6379
-    targetPort: 6379
+  - port: {{ .Values.redis.service.port }}
+    targetPort: {{ .Values.redis.service.port }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-svc
+  namespace: {{ .Values.namespace }}
 spec:
+  type: {{ .Values.backend.service.type }}
   selector:
-    app: backend
-  type: ClusterIP
+    app: {{ .Values.backend.name }}
   ports:
-  - port: 8000
-    targetPort: 8000
+  - port: {{ .Values.backend.service.port }}
+    targetPort: {{ .Values.backend.service.port }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-svc
+  namespace: {{ .Values.namespace }}
 spec:
+  type: {{ .Values.frontend.service.type }}
   selector:
-    app: frontend
-  type: NodePort
+    app: {{ .Values.frontend.name }}
   ports:
-  - port: 5173
-    targetPort: 5173
-    nodePort: 31000
+  - port: {{ .Values.frontend.service.port }}
+    targetPort: {{ .Values.frontend.service.port }}
+    {{- if eq .Values.frontend.service.type "NodePort" }}
+    nodePort: {{ .Values.frontend.service.nodePort }}
+    {{- end }}

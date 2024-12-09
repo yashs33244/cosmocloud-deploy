@@ -1,101 +1,92 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis
-  namespace: default
+  name: {{ .Values.redis.name }}
+  namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.redis.replicas }}
   selector:
     matchLabels:
-      app: redis
+      app: {{ .Values.redis.name }}
   template:
     metadata:
       labels:
-        app: redis
+        app: {{ .Values.redis.name }}
     spec:
       containers:
-      - name: redis
-        image: redis:alpine
+      - name: {{ .Values.redis.name }}
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
         resources:
           requests:
-            cpu: 50m
-            memory: 32Mi
+            cpu: {{ .Values.redis.resources.requests.cpu }}
+            memory: {{ .Values.redis.resources.requests.memory }}
           limits:
-            cpu: 100m
-            memory: 64Mi
+            cpu: {{ .Values.redis.resources.limits.cpu }}
+            memory: {{ .Values.redis.resources.limits.memory }}
         ports:
-        - containerPort: 6379
+        - containerPort: {{ .Values.redis.service.port }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
-  namespace: default
+  name: {{ .Values.backend.name }}
+  namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.backend.replicas }}
   selector:
     matchLabels:
-      app: backend
+      app: {{ .Values.backend.name }}
   template:
     metadata:
       labels:
-        app: backend
+        app: {{ .Values.backend.name }}
     spec:
       containers:
-      - name: backend
-        image: shreybatra/sample-backend
+      - name: {{ .Values.backend.name }}
+        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         resources:
           requests:
-            cpu: 100m
-            memory: 128Mi
+            cpu: {{ .Values.backend.resources.requests.cpu }}
+            memory: {{ .Values.backend.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 256Mi
+            cpu: {{ .Values.backend.resources.limits.cpu }}
+            memory: {{ .Values.backend.resources.limits.memory }}
         ports:
-        - containerPort: 8000
+        - containerPort: {{ .Values.backend.service.port }}
         env:
         - name: REDIS_URI
-          value: redis://redis-svc:6379
-        startupProbe:
-          httpGet:
-            path: /
-            port: 8000
-          failureThreshold: 3
-          periodSeconds: 5
+          value: {{ .Values.backend.env.REDIS_URI }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
-  namespace: default
+  name: {{ .Values.frontend.name }}
+  namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
-      app: frontend
+      app: {{ .Values.frontend.name }}
   template:
     metadata:
       labels:
-        app: frontend
+        app: {{ .Values.frontend.name }}
     spec:
       containers:
-      - name: frontend
-        image: shreybatra/sample-frontend
+      - name: {{ .Values.frontend.name }}
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         resources:
           requests:
-            cpu: 100m
-            memory: 128Mi
+            cpu: {{ .Values.frontend.resources.requests.cpu }}
+            memory: {{ .Values.frontend.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 256Mi
+            cpu: {{ .Values.frontend.resources.limits.cpu }}
+            memory: {{ .Values.frontend.resources.limits.memory }}
         ports:
-        - containerPort: 5173
+        - containerPort: {{ .Values.frontend.service.port }}
         env:
         - name: BACKEND_URL
-          value: http://backend-svc:8000
-        startupProbe:
-          httpGet:
-            path: /
-            port: 5173
-          failureThreshold: 3
-          periodSeconds: 5
+          value: {{ .Values.frontend.env.BACKEND_URL }}
